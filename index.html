@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        
+        /* Basic CSS styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        table, th, td {
+            border: 1px solid #000;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        form {
+            width: 50%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        .delete-button {
+            background-color: #ff0000;
+        }
+
+        .delete-button:hover {
+            background-color: #ff3333;
+        }
+    </style>
+    </style>
+</head>
+<body>
+    <h1>Blog Post Management</h1>
+
+    <h2>Blog Posts</h2>
+    <table id="blog-table">
+        <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+    <h2>Create New Blog Post</h2>
+    <form id="create-form">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" placeholder="Enter the title">
+
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" rows="4" placeholder="Enter the content"></textarea>
+
+        <input type="button" value="Create Post" onclick="createPost()">
+    </form>
+
+    <h2>Update Blog Post</h2>
+    <form id="update-form">
+        <label for="update-title">Title:</label>
+        <input type="text" id="update-title" name="update-title" placeholder="Enter the title">
+
+        <label for="update-content">Content:</label>
+        <textarea id="update-content" name="update-content" rows="4" placeholder="Enter the content"></textarea>
+
+        <input type="button" value="Update Post" onclick="updatePost()">
+    </form>
+
+    <script>
+        // Sample initial blog post data
+        const blogPosts = [
+            { title: "Sample Post 1", content: "This is the content of the first post." },
+            { title: "Sample Post 2", content: "This is the content of the second post." }
+        ];
+
+        // Function to display blog posts in the table
+        function displayBlogPosts() {
+            const table = document.getElementById("blog-table");
+
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            for (const post of blogPosts) {
+                const row = table.insertRow(-1);
+                const titleCell = row.insertCell(0);
+                const contentCell = row.insertCell(1);
+                const actionCell = row.insertCell(2);
+
+                titleCell.innerHTML = post.title;
+                contentCell.innerHTML = post.content;
+
+                const deleteButton = document.createElement("input");
+                deleteButton.type = "button";
+                deleteButton.value = "Delete";
+                deleteButton.className = "delete-button";
+                deleteButton.addEventListener("click", function() {
+                    deletePost(post);
+                });
+                actionCell.appendChild(deleteButton);
+            }
+        }
+
+        // Function to create a new blog post
+        function createPost() {
+            const title = document.getElementById("title").value;
+            const content = document.getElementById("content").value;
+
+            if (title && content) {
+                blogPosts.push({ title, content });
+                displayBlogPosts();
+                clearCreateForm();
+            }
+        }
+
+        // Function to clear the create form
+        function clearCreateForm() {
+            document.getElementById("title").value = "";
+            document.getElementById("content").value = "";
+        }
+
+        // Function to delete a blog post
+        function deletePost(post) {
+            const index = blogPosts.indexOf(post);
+            if (index !== -1) {
+                blogPosts.splice(index, 1);
+                displayBlogPosts();
+            }
+        }
+
+        // Function to update a blog post
+        function updatePost() {
+            const title = document.getElementById("update-title").value;
+            const content = document.getElementById("update-content").value;
+
+            if (title && content) {
+                const updatedPost = { title, content };
+                const index = blogPosts.findIndex(post => post.title === title);
+                if (index !== -1) {
+                    blogPosts[index] = updatedPost;
+                    displayBlogPosts();
+                    clearUpdateForm();
+                }
+            }
+        }
+
+        // Function to clear the update form
+        function clearUpdateForm() {
+            document.getElementById("update-title").value = "";
+            document.getElementById("update-content").value = "";
+        }
+
+        // Initial display of blog posts
+        displayBlogPosts();
+    </script>
+</body>
+</html>
